@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sea Side JS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="sjs.iife.min.js"></script>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <template id="template">
+        <header>
+            <h1>SeaSide JS</h1>
+            <div class="desc">
+                <h2>{{ language[lang].desc }}</h2>
+            </div>
+            <h3>{{ language[lang].version }}<code>1.0.0</code></h3>
+            <h4 #show="show">{{ language[lang].count }}: <code>{{ count }}</code></h4>
+            <h4>{{ language[lang].time }}: <code>{{ time }}</code></h4>
+            <button #show="show" @click="increment">{{ language[lang].btn.increment }}</button>
+            <button @click="show = !show">
+                {{ show ? language[lang].btn.hide : language[lang].btn.show }}
+            </button>
+            <button @click="lang = lang === 'en' ? 'zh' : 'en'">
+                {{ lang === 'en' ? '中文' : 'English' }}
+            </button>
+        </header>
+        <div class="feature-box">
+            <div class="feature">
+                <h3>Reactive</h3>
+                <p>You can play with the <code>count</code> via the button above.</p>
+            </div>
+            <div class="feature">
+                <h3>Model Binding</h3>
+                <p>We use <code>model</code> to bind the <code>lang</code> property.</p>
+                <select #model="lang">
+                    <option selected value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+            <div class="feature">
+                <h3>Event Binding</h3>
+                <p>We use <code>click</code> to bind the <code>increment</code> method.</p>
+                <button @click="increment">{{ language[lang].btn.increment }}</button>
+            </div>
+            <div class="feature">
+                <h3>Display Everything</h3>
+                <p>Now, You can use <nocompile><code>{{ }}</code></nocompile> to display everything even JS code.</p>
+            </div>
+        </div>
+    </template>
+</body>
+<script src="app.js"></script>
+
+</html>

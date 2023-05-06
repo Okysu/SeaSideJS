@@ -1,0 +1,48 @@
+{
+  "name": "sea-side-js",
+  "version": "1.0.0",
+  "description": "A simple and convenient responsive framework designed to provide Reactive interaction functionality for regular web pages.",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.esm.js",
+  "type": "commonjs",
+  "scripts": {
+    "lint": "eslint src/**",
+    "test": "jest",
+    "build": "rm -rf dist && rollup --config rollup.config.ts --configPlugin typescript"
+  },
+  "keywords": [
+    "Responsive design",
+    "Interactive features",
+    "Web pages",
+    "Mobile optimization",
+    "Front-end development tools",
+    "Simple and easy-to-use",
+    "Fast construction",
+    "Front-end responsive layout",
+    "Aesthetically pleasing and easy to maintain"
+  ],
+  "author": "Okysu",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@types/jest": "^29.5.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
+    "eslint": "^8.39.0",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.8",
+    "rollup": "^3.21.4",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@rollup/plugin-terser": "^0.4.1",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1"
+  }
+}
