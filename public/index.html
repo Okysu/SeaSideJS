@@ -20,9 +20,9 @@
                 <h2>{{ language[lang].desc }}</h2>
             </div>
             <h3>{{ language[lang].version }}<code>1.0.0</code></h3>
-            <h4 #show="show">{{ language[lang].count }}: <code>{{ count }}</code></h4>
+            <h4 #if="show">{{ language[lang].count }}: <code>{{ count }}</code></h4>
             <h4>{{ language[lang].time }}: <code>{{ time }}</code></h4>
-            <button #show="show" @click="increment">{{ language[lang].btn.increment }}</button>
+            <button #if="show" @click="increment">{{ language[lang].btn.increment }}</button>
             <button @click="show = !show">
                 {{ show ? language[lang].btn.hide : language[lang].btn.show }}
             </button>

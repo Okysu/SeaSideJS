@@ -70,26 +70,26 @@ class SeaSideJS {
             SeaSideJS._data = reactive(SeaSideJS._data, () => {
                 const app = document.querySelector('#app_' + instanceHash + '_sea_side_js') as HTMLElement;
                 if (app) {
-                    const newTemplate = compileTemplate(template, SeaSideJS._data, SeaSideJS._methods);
+                    const { node, idMap, nodeTree } = compileTemplate(template, SeaSideJS._data, SeaSideJS._methods);
 
                     // div wrapper
                     const div = document.createElement('div');
                     div.setAttribute('id', 'app_' + instanceHash + '_sea_side_js');
-                    div.appendChild(newTemplate);
+                    div.appendChild(node);
 
                     // call recompileTemplate with app and div
-                    diffTemplate(app, div);
+                    diffTemplate(app, div, nodeTree, idMap);
 
                     // console.log('data changed', app, div);
                 }
             });
             // compile the template
-            const compiledTemplate = compileTemplate(template, SeaSideJS._data, SeaSideJS._methods)
+            const { node, idMap, nodeTree } = compileTemplate(template, SeaSideJS._data, SeaSideJS._methods);
             // create a div element
             const app = document.createElement('div')
             app.setAttribute('id', 'app_' + instanceHash + '_sea_side_js')
             // append the instance to the root element
-            app.appendChild(compiledTemplate)
+            app.appendChild(node)
             // append the template to the root element
             const root = document.querySelector(this._root)
             if (root) {
