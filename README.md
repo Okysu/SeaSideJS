@@ -19,6 +19,7 @@ SeaSide JS offers the following features:
 To use SeaSide JS, you need to:
 
 - Download the SeaSide JS zip package.
+- Choose the version of SeaSide JS according to your project needs.
 - Import SeaSide JS and its dependencies into your project.
 
 ```html
@@ -35,17 +36,17 @@ app.mount("#app");
 
 ## Installation
 
-You can currently install SeaSide JS by downloading the zip package.
+You can currently install SeaSide JS by downloading the releases package.
 
-### ZIP Package
+### Releases Package
 
-You can download the SeaSide JS zip package on GitHub, unzip it, and import the files under the dist directory into your project.
+You can download the SeaSide JS releases package on GitHub, and import the files under the dist directory into your project.
 
 ## Acknowledgments
 
 The inspiration for SeaSide JS came from Vue.js and the book "Design and Implementation of Vue.js".
 
-Meanwhile, SeaSide comes from the ancient city "Sea and River by the Coast" in my hometown "Taixing".
+At the same time, SeaSide comes from the ancient name of my hometown "Taixing" - Jinchuan and Hai.
 
 ## License
 

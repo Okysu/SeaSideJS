@@ -19,6 +19,7 @@ SeaSide JS 提供了以下功能：
 使用 SeaSide JS 要求：
 
 - 下载 SeaSide JS 的压缩包。
+- 根据的你的项目的需要，选择 SeaSide JS 的版本。
 - 把 SeaSide JS 和其依赖项导入项目中。
 
 ```html
@@ -45,7 +46,7 @@ app.mount("#app");
 
 SeaSide JS 的灵感来自于 Vue.js 和《Vue.js的设计与实现》这本书。
 
-同时，SeaSide，来自我家乡“泰兴”的古城——襟江带海。
+同时，SeaSide，来自我家乡“泰兴”的古称——襟江带海。
 
 ## 许可证
 
