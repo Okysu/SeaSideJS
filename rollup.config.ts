@@ -17,6 +17,18 @@ export default {
             exports: 'named',
         },
         {
+            file: "dist/sjs.cjs.terser.js",
+            format: "cjs",
+            exports: 'named',
+            plugins: [terser()],
+        },
+        {
+            file: "dist/sjs.esm.terser.js",
+            format: "es",
+            exports: 'named',
+            plugins: [terser()],
+        },
+        {
             file: "dist/sjs.iife.min.js",
             format: "iife",
             name: "SeaSideJS",
