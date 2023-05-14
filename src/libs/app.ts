@@ -88,18 +88,19 @@ class SeaSideJS {
             // create a div element
             const app = document.createElement('div')
             app.setAttribute('id', 'app_' + instanceHash + '_sea_side_js')
-            // append the instance to the root element
             app.appendChild(node)
             // append the template to the root element
-            const root = document.querySelector(this._root)
-            if (root) {
-                root.appendChild(app)
-                if (SeaSideJS._mounted) {
-                    // bind to mounted
-                    SeaSideJS._mounted = SeaSideJS._mounted.bind(SeaSideJS._data)
-                    // call mounted
-                    SeaSideJS._mounted()
+            const appendAppToRoot = () => {
+                const root = document.querySelector(this._root);
+                if (root) {
+                    root.appendChild(app);
                 }
+            };
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', appendAppToRoot);
+            } else {
+                appendAppToRoot();
             }
         }
         return this

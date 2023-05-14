@@ -1,4 +1,5 @@
-const app = SeaSideJS.default.createApp(
+import SeaSideJS, { getTemplate } from "../dist/sjs.esm.js"
+const app = SeaSideJS.createApp(
     {
         data() {
             return {
@@ -37,7 +38,7 @@ const app = SeaSideJS.default.createApp(
                 this.count++;
             },
         },
-        template: SeaSideJS.getTemplate("#template"),
+        template: getTemplate("#template"),
         mounted() {
             setInterval(() => {
                 this.time = new Date().toLocaleString()
