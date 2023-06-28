@@ -23,15 +23,24 @@ To use SeaSide JS, you need to:
 - Import SeaSide JS and its dependencies into your project.
 
 ```html
-<script type="module" src="path/to/SeaSideJs.js"></script>
+<div id="app">
+    <!-- You can insert anything -->
+</div>
+
+<template id="template">
+    <div>
+        <h1>Count: {{ count }}</h1>
+        <button @click="increment">Increment</button>
+    </div>
+</template>
+<script type="module" src="yourapp.js"></script>
 ```
 
 ```js
-import { createApp } from "../dist/sjs.esm.js";
-const app = createApp({
-  // your options...
-});
-app.mount("#app");
+import SeaSideJS, { getTemplate } from "/path/sjs.js";
+const app = SeaSideJS.createApp({
+    template: getTemplate("#template"), // or createTemplate even just a string
+}).mount("#app")
 ```
 
 ## Installation

@@ -4,9 +4,45 @@
  * @since 2023-05-05
  */
 
-import { setAttributeOrProperty, getElementEvent } from './useModel'
-
 export const updaters: (() => void)[] = [];
+
+// event map
+const elementEventMap = new Map([
+    ['input', 'input'],
+    ['textarea', 'input'],
+    ['select', 'change'],
+    ['img', 'load']
+])
+
+/**
+ * set attribute or property
+ * @param target - target element
+ * @param scope  - attribute or property
+ * @param value  - value
+ */
+export function setAttributeOrProperty(target: HTMLElement, scope: string, value: any) {
+    if (scope === 'class') {
+        target.classList.add(value);
+    } else if (scope === 'style') {
+        Object.assign(target.style, value);
+    } else {
+        target.setAttribute(scope, value);
+    }
+}
+
+/**
+ * get element event
+ * @param element - target element
+ * @returns event name
+ */
+export function getElementEvent(element: HTMLElement): string | undefined {
+    for (const [type, event] of elementEventMap.entries()) {
+        if (element.tagName.toLowerCase() === type) {
+            return event
+        }
+    }
+    return undefined
+}
 
 /**
  * Create a template
@@ -45,21 +81,33 @@ interface NodeInfo {
 /**
  * Generate node tree
  * @param node node to be processed
+ * @param parentNodeKey parent node key
  * @param idMap collection of node id
  * @param nodeTree node tree
  * @param idCounter node id counter
  */
-function generateNodeTree(node: Node, idMap: Map<Node, string>, nodeTree: { [key: string]: NodeInfo }, idCounter: { value: number }): void {
-    if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
-        const id = `node-${idCounter.value++}`;
-        const attrs = node.nodeType === Node.ELEMENT_NODE ? (node as HTMLElement).attributes : null;
-        const events = {}; // TODO: Collect events from the node
-        nodeTree[id] = { node, attrs, events };
-        idMap.set(node, id);
+function generateNodeTree(node: Node, parentNodeKey: string | null, idMap: Map<Node, string>, nodeTree: { [key: string]: NodeInfo }, idCounter: { value: number }, siblingIndex: number = 0): void {
+    const counter = idCounter.value;
+
+    const key = parentNodeKey ? `${parentNodeKey}-${siblingIndex}` : counter.toString();
+
+    if ((node as HTMLElement).setAttribute) {
+        (node as HTMLElement).setAttribute('data-v-key', key);
     }
 
-    node.childNodes.forEach((childNode) => generateNodeTree(childNode, idMap, nodeTree, idCounter));
+    if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
+        const id = counter.toString();
+        const attrs = node.nodeType === Node.ELEMENT_NODE ? (node as HTMLElement).attributes : null;
+        const events = {}; // TODO: Collect events from the node
+        nodeTree[key] = { node, attrs, events };
+        idMap.set(node, key);
+        idCounter.value++;
+    }
+
+    let childIndex = 0;
+    node.childNodes.forEach((childNode) => generateNodeTree(childNode, key, idMap, nodeTree, idCounter, childIndex++));
 }
+
 
 
 
@@ -76,12 +124,14 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
 
     // Bind data to each method
     for (const key in methods) {
-        methods[key] = methods[key].bind(data);
+        if (methods.hasOwnProperty(key)) {
+            methods[key] = methods[key].bind(data);
+        }
     }
 
     const idMap = new Map<Node, string>();
     const nodeTree: { [key: string]: NodeInfo } = {};
-    generateNodeTree(compiledTemplate, idMap, nodeTree, { value: 0 });
+    generateNodeTree(compiledTemplate, null, idMap, nodeTree, { value: 0 });
 
     function replaceContent(node: Node) {
 
@@ -106,7 +156,7 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                     const code = match[1];
                     try {
                         const fn = new Function("data", "methods", `with(data) { with(methods) { return ${code}; } }`);
-                        const value = fn(data, methods);
+                        const value = fn(data, methods || {});
                         result = result.replace(match[0], value !== undefined ? value : match[0]);
                     } catch (error) {
                         console.error(`Error executing code '${code}' in template:`, error);
@@ -138,7 +188,7 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                         const updater = () => {
                             try {
                                 const fn = new Function("data", "methods", `with(data) { with(methods) { return ${valueCode}; } }`);
-                                const value = fn(data, methods);
+                                const value = fn(data, methods || {});
                                 setAttributeOrProperty(element, scope, value);
                             } catch (error) {
                                 console.error(`Error executing code '${valueCode}' in template:`, error);
@@ -162,7 +212,7 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                             const updater = () => {
                                 try {
                                     const fn = new Function("data", "methods", `with(data) { with(methods) { return ${valueCode}; } }`);
-                                    const value = fn(data, methods);
+                                    const value = fn(data, methods || {});
                                     setAttributeOrProperty(element, scope, value);
                                 } catch (error) {
                                     console.error(`Error executing code '${valueCode}' in template:`, error);
@@ -181,10 +231,10 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                                 let value = (event.target as any).value;
                                 if (value) {
                                     const fn = new Function("data", "methods", `with(data) { with(methods) { ${valueCode} = "${value}"; } }`);
-                                    fn(data, methods);
+                                    fn(data, methods || {});
                                 } else {
                                     const fn = new Function("data", "methods", `with(data) { with(methods) { ${valueCode} = ""; } }`);
-                                    fn(data, methods);
+                                    fn(data, methods || {});
                                 }
                             };
                             element.addEventListener(eventType, handler);
@@ -197,7 +247,7 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                         const showUpdater = () => {
                             try {
                                 const fn = new Function("data", "methods", `with(data) { with(methods) { return ${showCode}; } }`);
-                                const value = fn(data, methods);
+                                const value = fn(data, methods || {});
                                 if (value) {
                                     element.style.display = "";
                                 } else {
@@ -219,7 +269,7 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                         const ifUpdater = () => {
                             try {
                                 const fn = new Function("data", "methods", `with(data) { with(methods) { return ${ifCode}; } }`);
-                                const value = fn(data, methods);
+                                const value = fn(data, methods || {});
                                 if (value && !hasBeenInserted) {
                                     placeholder.parentNode!.insertBefore(element, placeholder);
                                     placeholder.parentNode!.removeChild(placeholder);
@@ -251,7 +301,7 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                             const forUpdater = () => {
                                 try {
                                     const fn = new Function("data", "methods", `with(data) { with(methods) { return ${listCode}; } }`);
-                                    const list = fn(data, methods);
+                                    const list = fn(data, methods || {});
                                     if (Array.isArray(list)) {
                                         const fragment = document.createDocumentFragment();
                                         list.forEach((itemData, index) => {
@@ -260,15 +310,16 @@ function compileTemplate(template: Node, data: { [key: string]: any }, methods: 
                                             const compiled = compileTemplate(clonedNode, newData, methods);
                                             fragment.appendChild(compiled.node);
                                         });
-                                        // Remove the original element
-                                        element.remove();
                                         placeholder.parentNode!.insertBefore(fragment, placeholder.nextSibling);
+                                        // remove the element children
+                                        element.innerHTML = "";
                                     } else {
                                         console.error(`Error: the value of '${listCode}' is not an array.`);
                                     }
                                 } catch (error) {
                                     console.error(`Error executing code '${listCode}' in #for directive:`, error);
                                 }
+                                // 
                             };
                             updaters.push(forUpdater);
                             forUpdater(); // Call the updater initially to set the value                            
