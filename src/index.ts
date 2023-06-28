@@ -1,5 +1,4 @@
-import { reactive } from "./libs/reactive"
-import { useModel, useProxyModel } from "./libs/useModel"
+import { reactive, computed, watch } from "./libs/proxy"
 import { getTemplate, createTemplate } from "./libs/template"
 import { SeaSideJS } from "./libs/app"
 
@@ -7,8 +6,8 @@ export {
     reactive,
     getTemplate,
     createTemplate,
-    useModel,
-    useProxyModel,
+    computed,
+    watch,
 }
 
 export default SeaSideJS
