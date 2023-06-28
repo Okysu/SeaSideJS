@@ -52,6 +52,9 @@
                 <p>Now, You can use <nocompile><code>{{ }}</code></nocompile> to display everything even JS code.</p>
             </div>
         </div>
+        <ul #for="item in list">
+            <li>{{ item }}</li>
+        </ul>
     </template>
 </body>
 <script type="module" src="app.js"></script>

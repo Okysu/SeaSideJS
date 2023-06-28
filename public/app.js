@@ -7,6 +7,7 @@ const app = SeaSideJS.createApp(
                 time: new Date().toLocaleString(),
                 show: true,
                 lang: "en",
+                list: [1, 2, 3, 4, 5],
                 language: {
                     en: {
                         desc: "A simple and convenient responsive framework designed to provide Reactive interaction functionality for regular web pages.",
@@ -40,8 +41,10 @@ const app = SeaSideJS.createApp(
         },
         template: getTemplate("#template"),
         mounted() {
+            console.log("mounted", this.count);
             setInterval(() => {
                 this.time = new Date().toLocaleString()
+                console.log(this.time);
             }, 1000);
         }
     }
