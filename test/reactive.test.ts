@@ -1,4 +1,4 @@
-import { reactive } from '../src/libs/reactive'
+import { reactive } from '../src/libs/proxy'
 
 
 const obj = reactive({
